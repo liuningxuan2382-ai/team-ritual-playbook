@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ritual Playbook</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.26.2/babel.min.js"></script>
+<style>
+:root{
+  --ink:#1b201d; --ink-soft:#54605a; --paper:#f6f3ea; --card:#fffdf7;
+  --line:#e3ddcd; --pine:#1f4b43; --pine-soft:#2f6358; --honey:#cf8a2c;
+  --rose:#b1546b; --bud:#6f8a3a; --thorn:#b04a32;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,"SF Mono","Cascadia Code",Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);
+  line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:760px;margin:0 auto;padding:0 18px 96px}
+.mono{font-family:var(--mono)}
+button{font-family:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--pine);outline-offset:2px;border-radius:4px}
+.bar{position:sticky;top:0;z-index:20;background:rgba(246,243,234,.92);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.bar-in{max-width:760px;margin:0 auto;padding:12px 18px;display:flex;align-items:center;gap:12px}
+.brand{font-family:var(--serif);font-weight:600;font-size:18px;letter-spacing:.2px;cursor:pointer}
+.brand .dot{color:var(--honey)}
+.bk{margin-left:auto;background:none;border:1px solid var(--line);color:var(--ink-soft);
+  font-size:12px;padding:6px 12px;border-radius:999px;font-family:var(--mono);
+  text-transform:uppercase;letter-spacing:.08em}
+.bk:hover{border-color:var(--pine);color:var(--pine)}
+.hero{padding:34px 0 10px}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--pine);margin-bottom:14px}
+.hero h1{font-family:var(--serif);font-weight:600;line-height:1.08;font-size:clamp(30px,7vw,46px);margin:0 0 14px;letter-spacing:-.5px}
+.hero p{color:var(--ink-soft);max-width:50ch;font-size:16px;margin:0}
+.grid{display:grid;gap:14px;margin-top:26px}
+.rcard{display:block;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);
+  border-radius:14px;padding:20px;transition:transform .14s ease,border-color .14s ease,box-shadow .14s ease}
+.rcard:hover{transform:translateY(-2px);border-color:var(--pine);box-shadow:0 8px 24px -16px rgba(31,75,67,.5)}
+.rcard .k{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--honey)}
+.rcard h3{font-family:var(--serif);font-size:24px;font-weight:600;margin:6px 0 8px}
+.rcard p{color:var(--ink-soft);font-size:14px;margin:0}
+.rcard .go{font-family:var(--mono);font-size:12px;color:var(--pine);margin-top:14px;display:flex;align-items:center;gap:6px}
+.aicard{background:var(--pine);color:#f3efe2;border-color:var(--pine)}
+.aicard .k{color:var(--honey)} .aicard h3{color:#fffdf7} .aicard p{color:#cfe0d9} .aicard .go{color:var(--honey)}
+.aicard:hover{box-shadow:0 10px 30px -16px rgba(31,75,67,.8)}
+.detail-head{padding:30px 0 8px}
+.detail-head .k{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--pine)}
+.detail-head h2{font-family:var(--serif);font-size:clamp(28px,6vw,38px);font-weight:600;margin:8px 0 0;letter-spacing:-.4px}
+.twocol{display:grid;gap:14px;margin:20px 0}
+@media(min-width:560px){.twocol{grid-template-columns:1fr 1fr}}
+.box{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+.box h4{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);margin:0 0 8px}
+.box p{margin:0;font-size:14px;color:var(--ink)}
+.section-t{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--pine);
+  margin:30px 0 12px;display:flex;align-items:center;gap:10px}
+.section-t::after{content:"";flex:1;height:1px;background:var(--line)}
+.timeline{position:relative;margin-left:4px}
+.trow{display:grid;grid-template-columns:56px 1fr;gap:14px;position:relative;padding-bottom:18px}
+.trow:last-child{padding-bottom:0}
+.tc{font-family:var(--mono);font-size:13px;color:var(--pine);padding-top:1px;font-weight:600}
+.trail{position:relative}
+.trail::before{content:"";position:absolute;left:-9px;top:6px;width:9px;height:9px;border-radius:50%;background:var(--paper);border:2px solid var(--pine)}
+.trow:not(:last-child) .trail::after{content:"";position:absolute;left:-5px;top:14px;bottom:-18px;width:2px;background:var(--line)}
+.trail .lab{font-weight:600;font-size:15px}
+.trail .nt{color:var(--ink-soft);font-size:13.5px;margin-top:2px}
+.dur{font-family:var(--mono);font-size:11px;color:var(--honey);margin-left:8px}
+.plist{list-style:none;padding:0;margin:0;display:grid;gap:9px}
+.plist li{display:grid;grid-template-columns:18px 1fr;gap:10px;font-size:14px;color:var(--ink)}
+.plist li .m{color:var(--pine);font-family:var(--mono);font-size:12px;padding-top:2px}
+.plist.warn li .m{color:var(--thorn)}
+.cols{display:grid;gap:12px;margin-top:14px}
+@media(min-width:640px){.cols{grid-template-columns:repeat(3,1fr)}}
+.col{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column}
+.col-h{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.col-h .swatch{width:10px;height:10px;border-radius:50%}
+.col-h .nm{font-family:var(--serif);font-size:17px;font-weight:600}
+.col-h .ct{font-family:var(--mono);font-size:11px;color:var(--ink-soft);margin-left:auto}
+.col .desc{font-size:12px;color:var(--ink-soft);margin:0 0 10px}
+.cards-area{display:grid;gap:8px;margin-bottom:10px}
+.scard{font-size:13.5px;background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--line);border-radius:8px;padding:9px 10px;position:relative}
+.scard .x{position:absolute;top:6px;right:7px;background:none;border:none;color:var(--ink-soft);font-size:14px;line-height:1;opacity:.5;padding:2px}
+.scard .x:hover{opacity:1;color:var(--thorn)}
+.scard .txt{padding-right:14px;word-break:break-word}
+.addrow{display:flex;gap:6px;margin-top:auto}
+.addrow input{flex:1;min-width:0;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px;background:var(--paper);color:var(--ink);font-family:inherit}
+.addrow input:focus{outline:none;border-color:var(--pine)}
+.addrow button{background:var(--ink);color:var(--paper);border:none;border-radius:8px;width:34px;font-size:18px;line-height:1;flex:none}
+.addrow button:hover{background:var(--pine)}
+.empty{font-size:12px;color:var(--ink-soft);font-style:italic;padding:6px 2px}
+.timer{background:var(--ink);color:var(--paper);border-radius:14px;padding:22px;text-align:center;margin-top:14px}
+.timer .big{font-family:var(--mono);font-size:clamp(44px,13vw,64px);font-weight:600;letter-spacing:1px;line-height:1}
+.timer.warnflash .big{color:var(--honey)}
+.timer .ph{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--honey);margin-bottom:6px}
+.timer .sub{color:#cdd5cf;font-size:13px;margin-top:6px;min-height:18px}
+.tctrl{display:flex;gap:8px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+.tctrl button{background:rgba(255,255,255,.1);color:var(--paper);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:8px 16px;font-size:13px;font-family:var(--mono)}
+.tctrl button.primary{background:var(--honey);color:#241a06;border-color:var(--honey);font-weight:600}
+.tctrl button:hover{background:rgba(255,255,255,.2)} .tctrl button.primary:hover{filter:brightness(1.06)}
+.preset{display:flex;gap:6px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.preset button{background:none;border:1px solid var(--line);color:var(--ink-soft);font-family:var(--mono);font-size:12px;border-radius:999px;padding:5px 12px}
+.preset button.on{border-color:var(--pine);color:var(--pine);background:#eef3f0}
+.phasebar{display:flex;gap:4px;margin-top:14px}
+.phasebar .seg{flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.16)}
+.phasebar .seg.done{background:var(--honey)} .phasebar .seg.cur{background:#fff}
+.builder{margin-top:14px}
+.chiprow{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.chip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:8px 13px;font-size:13px;color:var(--ink);text-align:left}
+.chip:hover{border-color:var(--pine);color:var(--pine)} .chip.added{opacity:.4;pointer-events:none}
+.agendabuild{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;min-height:90px}
+.bitem{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px}
+.bitem:last-child{border-bottom:none}
+.bitem .n{font-family:var(--mono);font-size:12px;color:var(--pine);width:20px;flex:none}
+.bitem .t{flex:1}
+.bitem .up,.bitem .rm{background:none;border:none;color:var(--ink-soft);font-size:15px;padding:3px 6px}
+.bitem .up:hover{color:var(--pine)} .bitem .rm:hover{color:var(--thorn)}
+.customrow{display:flex;gap:8px;margin-top:12px}
+.customrow input{flex:1;border:1px solid var(--line);border-radius:8px;padding:9px 11px;font-size:14px;background:var(--card);font-family:inherit}
+.customrow input:focus{outline:none;border-color:var(--pine)}
+.customrow button{background:var(--ink);color:var(--paper);border:none;border-radius:8px;padding:0 16px;font-size:14px}
+.customrow button:hover{background:var(--pine)}
+.copybtn{margin-top:14px;background:var(--pine);color:#fffdf7;border:none;border-radius:10px;padding:11px 18px;font-size:14px;font-weight:600;width:100%}
+.copybtn:hover{background:var(--pine-soft)}
+.coach-tabs{display:flex;gap:6px;margin:18px 0 4px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px}
+.coach-tabs button{flex:1;border:none;background:none;padding:9px;border-radius:999px;font-size:13px;font-family:var(--mono);color:var(--ink-soft);letter-spacing:.03em}
+.coach-tabs button.on{background:var(--pine);color:#fffdf7}
+.budget{font-family:var(--mono);font-size:11px;color:var(--ink-soft);text-align:right;margin:8px 2px 0;letter-spacing:.04em}
+.budget b{color:var(--pine)} .budget.low b{color:var(--thorn)}
+.chatwin{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:12px;min-height:240px;display:flex;flex-direction:column;gap:12px}
+.msg{max-width:88%;font-size:14px;padding:11px 13px;border-radius:12px;white-space:pre-wrap;line-height:1.5}
+.msg.user{align-self:flex-end;background:var(--ink);color:var(--paper);border-bottom-right-radius:3px}
+.msg.bot{align-self:flex-start;background:var(--paper);border:1px solid var(--line);border-bottom-left-radius:3px}
+.msg.sys{align-self:center;font-size:12px;color:var(--ink-soft);font-style:italic;background:none;text-align:center}
+.typing{align-self:flex-start;font-family:var(--mono);font-size:12px;color:var(--ink-soft)}
+.suggest{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.suggest button{border:1px solid var(--line);background:var(--card);border-radius:999px;font-size:12.5px;padding:7px 12px;color:var(--ink-soft)}
+.suggest button:hover{border-color:var(--pine);color:var(--pine)}
+.askrow{display:flex;gap:8px;margin-top:12px}
+.askrow textarea{flex:1;border:1px solid var(--line);border-radius:10px;padding:11px;font-size:14px;font-family:inherit;resize:none;background:var(--card);color:var(--ink);min-height:46px}
+.askrow textarea:focus{outline:none;border-color:var(--pine)}
+.askrow button{background:var(--pine);color:#fffdf7;border:none;border-radius:10px;padding:0 18px;font-size:14px;font-weight:600;flex:none}
+.askrow button:disabled{opacity:.4;cursor:not-allowed}
+.askrow button:hover:not(:disabled){background:var(--pine-soft)}
+.rec-out{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px;margin-top:14px;font-size:14.5px;white-space:pre-wrap;line-height:1.55}
+.grounded{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--bud);background:#eef2e6;border:1px solid #d8e2c4;border-radius:999px;padding:3px 9px;margin-bottom:4px}
+.grounded .d{width:6px;height:6px;border-radius:50%;background:var(--bud)}
+.foot{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-soft);font-family:var(--mono);letter-spacing:.03em}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useEffect, useRef } = React;
+
+/* Single source of truth for the UI. (The server keeps its own copy
+   of this same content to ground the AI — see functions/api/coach.js.) */
+const PLAYBOOK = {
+  retro: {
+    id: "retro", name: "Retrospective", kicker: "Inspect & adapt",
+    blurb: "A regular look back at how the team is working — so the team, not just the product, keeps improving.",
+    purpose: "Give the team a safe, recurring space to inspect how they work and commit to a few concrete improvements.",
+    whenToUse: "End of a sprint, project, or milestone — and any time momentum or morale dips. The busier you are, the more you need it.",
+    agenda: [
+      { t: 0, label: "Set the stage", note: "Welcome, restate the Prime Directive, quick safety check." },
+      { t: 5, label: "Gather data", note: "Everyone fills the Rose / Bud / Thorn board. Silent first, then share." },
+      { t: 20, label: "Generate insight", note: "Cluster the cards, find themes, dig into the why." },
+      { t: 35, label: "Decide what to do", note: "Pick 1–3 actions, each with a named owner and a date." },
+      { t: 50, label: "Close", note: "Appreciations, plus a quick plus/delta on the retro itself." },
+      { t: 60, label: "Done", note: "" },
+    ],
+    tips: [
+      "Open with the Prime Directive: assume everyone did the best they could with what they knew at the time.",
+      "Timebox hard — a watched clock keeps the loudest voice from eating the room.",
+      "Every action gets one owner and a date, or it isn't an action.",
+      "Start the next retro by checking last retro's actions. Rotate who facilitates.",
+    ],
+    pitfalls: [
+      "Blame spirals instead of system fixes.",
+      "Vague actions with no owner that nobody ever revisits.",
+      "One loud voice dominates; quieter folks go silent.",
+      "Skipping it when things get busy — exactly when it matters most.",
+    ],
+  },
+  oneonone: {
+    id: "oneonone", name: "1-on-1", kicker: "Trust, weekly",
+    blurb: "A recurring, report-owned conversation to build trust, unblock, and grow. Not a status meeting.",
+    purpose: "Build a trusting relationship with each report and create a reliable channel to surface blockers, growth, and how they're really doing.",
+    whenToUse: "Weekly or biweekly with every direct report. Protect it — a canceled 1-on-1 sends a louder message than you think.",
+    agenda: [
+      { t: 0, label: "Check in", note: "How are you, really? Let them set the temperature." },
+      { t: 5, label: "Their topics", note: "Blockers, decisions, frustrations — they drive." },
+      { t: 15, label: "Growth & feedback", note: "Both directions. Ask for feedback on you, too." },
+      { t: 23, label: "Priorities & alignment", note: "Are we pointed at the right thing?" },
+      { t: 28, label: "Actions & close", note: "Capture follow-ups you'll actually follow up on." },
+      { t: 30, label: "Done", note: "" },
+    ],
+    tips: [
+      "It's their meeting. Let the report own the agenda.",
+      "Aim for 70/30 — they talk more than you.",
+      "Ask open questions; sit with the silence after them.",
+      "Take notes and close the loop next week. Trust is built on follow-through.",
+    ],
+    pitfalls: [
+      "Letting it decay into a status report.",
+      "Canceling repeatedly when you're busy.",
+      "Only meeting when something's wrong.",
+      "Doing most of the talking yourself.",
+    ],
+    prompts: [
+      "What's on your mind this week?",
+      "Where are you stuck or waiting on someone?",
+      "What would make next week better than this one?",
+      "What feedback do you have for me or the team?",
+      "How are you feeling about your growth lately?",
+      "What's something you're proud of that I might have missed?",
+    ],
+  },
+  critique: {
+    id: "critique", name: "Design Critique", kicker: "Sharpen the work",
+    blurb: "Structured feedback against shared goals — to improve the work, not to approve it or decide.",
+    purpose: "Surface diverse, structured feedback that makes the work better, anchored to the goals the presenter actually wants help with.",
+    whenToUse: "At meaningful milestones, when a designer wants input, or before a big decision — kept separate from approval.",
+    agenda: [
+      { t: 0, label: "Frame", note: "Presenter states the goal, constraints, and what feedback they want." },
+      { t: 5, label: "Present", note: "Walk the work. No selling, no defending — just show it." },
+      { t: 13, label: "Silent review", note: "Everyone notes observations against the stated goals." },
+      { t: 18, label: "Feedback round", note: "Observations and questions, not prescriptions." },
+      { t: 38, label: "Response & next steps", note: "Presenter reflects and names what they'll explore." },
+      { t: 45, label: "Done", note: "" },
+    ],
+    tips: [
+      "Critique the work, not the person.",
+      "Ask the presenter what feedback they want — then stay on it.",
+      "Anchor every comment to the stated goal.",
+      "Use \"I observe… / I wonder…\" instead of \"you should.\"",
+    ],
+    pitfalls: [
+      "Solutioning instead of observing.",
+      "Feedback unmoored from the goals.",
+      "The most senior voice quietly deciding the outcome.",
+      "Turning critique into a decision or approval meeting.",
+    ],
+    phases: [
+      { name: "Frame", mins: 5, note: "Goal, constraints, what feedback you want." },
+      { name: "Present", mins: 8, note: "Walk the work — no selling." },
+      { name: "Silent review", mins: 5, note: "Note observations against the goals." },
+      { name: "Feedback round", mins: 20, note: "Observe & wonder. No prescriptions." },
+      { name: "Response", mins: 7, note: "Presenter reflects & names next steps." },
+    ],
+  },
+};
+
+const fmt = (mins) => {
+  const m = Math.max(0, Math.floor(mins));
+  return `${String(Math.floor(m/60)).padStart(2,"0")}:${String(m%60).padStart(2,"0")}`;
+};
+const clock = (secs) => {
+  const s = Math.max(0, Math.floor(secs));
+  return `${String(Math.floor(s/60)).padStart(2,"0")}:${String(s%60).padStart(2,"0")}`;
+};
+
+/* ---- talk to our own server endpoint (NOT a model directly) ---- */
+async function callCoach(payload) {
+  const r = await fetch("/api/coach", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  const data = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(data.error || "The coach is unavailable.");
+  return data; // { text, remaining }
+}
+
+function CountdownTimer({ presets = [5,15,30,45,60], initial = 60 }) {
+  const [total, setTotal] = useState(initial*60);
+  const [left, setLeft] = useState(initial*60);
+  const [running, setRunning] = useState(false);
+  const ref = useRef(null);
+  useEffect(() => {
+    if (running) {
+      ref.current = setInterval(() => {
+        setLeft((l) => { if (l<=1){ clearInterval(ref.current); setRunning(false); return 0; } return l-1; });
+      }, 1000);
+    }
+    return () => clearInterval(ref.current);
+  }, [running]);
+  const setMins = (m) => { setRunning(false); setTotal(m*60); setLeft(m*60); };
+  const warn = left<=60 && left>0;
+  return (
+    <div className={"timer"+(warn?" warnflash":"")}>
+      <div className="ph">Retro timer</div>
+      <div className="big">{clock(left)}</div>
+      <div className="sub">{left===0 ? "Time. Wrap the thought you're on." : `of ${clock(total)}`}</div>
+      <div className="tctrl">
+        <button className="primary" onClick={() => setRunning((r)=>!r)}>{running?"Pause":left===0?"Done":"Start"}</button>
+        <button onClick={() => { setRunning(false); setLeft(total); }}>Reset</button>
+      </div>
+      <div className="preset">
+        {presets.map((m) => (
+          <button key={m} className={total===m*60?"on":""} onClick={() => setMins(m)}>{m}m</button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function CritiqueRunner({ phases }) {
+  const [idx, setIdx] = useState(0);
+  const [left, setLeft] = useState(phases[0].mins*60);
+  const [running, setRunning] = useState(false);
+  const ref = useRef(null);
+  useEffect(() => {
+    if (running) {
+      ref.current = setInterval(() => {
+        setLeft((l) => {
+          if (l<=1) {
+            clearInterval(ref.current);
+            setIdx((i) => {
+              if (i < phases.length-1) { const ni=i+1; setLeft(phases[ni].mins*60); return ni; }
+              setRunning(false); return i;
+            });
+            return 0;
+          }
+          return l-1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(ref.current);
+  }, [running, phases]);
+  const goto = (i) => { setRunning(false); setIdx(i); setLeft(phases[i].mins*60); };
+  const cur = phases[idx];
+  const warn = left<=30 && left>0;
+  return (
+    <div className={"timer"+(warn?" warnflash":"")}>
+      <div className="ph">{`Phase ${idx+1} / ${phases.length} · ${cur.name}`}</div>
+      <div className="big">{clock(left)}</div>
+      <div className="sub">{cur.note}</div>
+      <div className="phasebar">
+        {phases.map((_, i) => (<div key={i} className={"seg "+(i<idx?"done":i===idx?"cur":"")} />))}
+      </div>
+      <div className="tctrl">
+        <button onClick={() => goto(Math.max(0, idx-1))}>‹ Prev</button>
+        <button className="primary" onClick={() => setRunning((r)=>!r)}>{running?"Pause":"Start"}</button>
+        <button onClick={() => goto(Math.min(phases.length-1, idx+1))}>Next ›</button>
+      </div>
+    </div>
+  );
+}
+
+const RBT = [
+  { key:"rose", name:"Rose", color:"var(--rose)", desc:"A win — something that went well." },
+  { key:"bud", name:"Bud", color:"var(--bud)", desc:"An idea or opportunity with potential." },
+  { key:"thorn", name:"Thorn", color:"var(--thorn)", desc:"A challenge or something that hurt." },
+];
+function RetroBoard() {
+  const [cards, setCards] = useState({
+    rose:["Shipped the redesign a day early"],
+    bud:["Pair more on tricky flows"],
+    thorn:["Handoffs to eng felt rushed"],
+  });
+  const [drafts, setDrafts] = useState({ rose:"", bud:"", thorn:"" });
+  const add = (k) => {
+    const v = drafts[k].trim(); if (!v) return;
+    setCards((c) => ({ ...c, [k]: [...c[k], v] }));
+    setDrafts((d) => ({ ...d, [k]: "" }));
+  };
+  const remove = (k,i) => setCards((c) => ({ ...c, [k]: c[k].filter((_,j)=>j!==i) }));
+  return (
+    <div className="cols">
+      {RBT.map((col) => (
+        <div className="col" key={col.key}>
+          <div className="col-h">
+            <span className="swatch" style={{ background: col.color }} />
+            <span className="nm">{col.name}</span>
+            <span className="ct">{cards[col.key].length}</span>
+          </div>
+          <p className="desc">{col.desc}</p>
+          <div className="cards-area">
+            {cards[col.key].length===0 && <div className="empty">No cards yet.</div>}
+            {cards[col.key].map((t,i) => (
+              <div className="scard" key={i} style={{ borderLeftColor: col.color }}>
+                <div className="txt">{t}</div>
+                <button className="x" onClick={() => remove(col.key,i)} aria-label="Remove card">×</button>
+              </div>
+            ))}
+          </div>
+          <div className="addrow">
+            <input value={drafts[col.key]} placeholder={`Add a ${col.name.toLowerCase()}…`}
+              onChange={(e) => setDrafts((d)=>({ ...d, [col.key]: e.target.value }))}
+              onKeyDown={(e) => e.key==="Enter" && add(col.key)} />
+            <button onClick={() => add(col.key)} aria-label={`Add ${col.name}`}>+</button>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function OneOnOneBuilder({ prompts }) {
+  const [agenda, setAgenda] = useState(["Check-in — how are you, really?", "What's on your mind this week?"]);
+  const [custom, setCustom] = useState("");
+  const [copied, setCopied] = useState(false);
+  const addItem = (t) => { if (t && !agenda.includes(t)) setAgenda((a)=>[...a, t]); };
+  const move = (i) => { if (i===0) return; setAgenda((a)=>{ const n=[...a]; [n[i-1],n[i]]=[n[i],n[i-1]]; return n; }); };
+  const rm = (i) => setAgenda((a)=>a.filter((_,j)=>j!==i));
+  const copy = () => {
+    const txt = "1-on-1 agenda\n" + agenda.map((t,i)=>`${i+1}. ${t}`).join("\n");
+    if (navigator.clipboard) navigator.clipboard.writeText(txt);
+    setCopied(true); setTimeout(()=>setCopied(false), 1600);
+  };
+  return (
+    <div className="builder">
+      <div className="chiprow">
+        {prompts.map((p) => (
+          <button key={p} className={"chip"+(agenda.includes(p)?" added":"")} onClick={() => addItem(p)}>+ {p}</button>
+        ))}
+      </div>
+      <div className="agendabuild">
+        {agenda.length===0 && <div className="empty">Tap a prompt above to start building.</div>}
+        {agenda.map((t,i) => (
+          <div className="bitem" key={t}>
+            <span className="n">{i+1}</span>
+            <span className="t">{t}</span>
+            <button className="up" onClick={() => move(i)} aria-label="Move up" disabled={i===0}>↑</button>
+            <button className="rm" onClick={() => rm(i)} aria-label="Remove">×</button>
+          </div>
+        ))}
+      </div>
+      <div className="customrow">
+        <input value={custom} placeholder="Add your own topic…"
+          onChange={(e) => setCustom(e.target.value)}
+          onKeyDown={(e) => { if (e.key==="Enter"){ addItem(custom.trim()); setCustom(""); } }} />
+        <button onClick={() => { addItem(custom.trim()); setCustom(""); }}>Add</button>
+      </div>
+      <button className="copybtn" onClick={copy}>{copied?"Copied to clipboard ✓":"Copy agenda"}</button>
+    </div>
+  );
+}
+
+const STARTERS = [
+  "How do I handle a quiet participant in a retro?",
+  "Someone keeps solutioning in critique — what do I say?",
+  "My 1-on-1s feel like status meetings. Fix?",
+  "How do I run my first retro with a new team?",
+];
+const SCENARIOS = [
+  "Two engineers keep clashing in meetings",
+  "Morale dipped after a rough launch",
+  "A designer wants feedback before a big decision",
+  "New report, I don't know them yet",
+];
+
+function Coach() {
+  const [tab, setTab] = useState("ask");
+  const [chat, setChat] = useState([
+    { role:"bot", text:"I'm your facilitator coach, grounded in this playbook. Ask me anything about running these rituals." },
+  ]);
+  const [input, setInput] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [remaining, setRemaining] = useState(null);
+  const [out, setOut] = useState(false);
+
+  const [rec, setRec] = useState("");
+  const [recIn, setRecIn] = useState("");
+  const [recBusy, setRecBusy] = useState(false);
+
+  const applyMeta = (data) => {
+    if (data && typeof data.remaining === "number") {
+      setRemaining(data.remaining);
+      if (data.remaining <= 0) setOut(true);
+    }
+  };
+
+  const send = async (q) => {
+    const text = (q ?? input).trim();
+    if (!text || busy || out) return;
+    setInput("");
+    const next = [...chat, { role:"user", text }];
+    setChat(next); setBusy(true);
+    try {
+      const msgs = next
+        .filter((m) => m.role==="user" || m.role==="bot")
+        .slice(-8)
+        .map((m) => ({ role: m.role==="user" ? "user" : "assistant", content: m.text }));
+      const data = await callCoach({ mode:"ask", messages: msgs });
+      applyMeta(data);
+      setChat((c) => [...c, { role:"bot", text: data.text || "(no answer)" }]);
+    } catch (e) {
+      setChat((c) => [...c, { role:"sys", text: e.message }]);
+      if (/budget|limit/i.test(e.message)) { setOut(true); setRemaining(0); }
+    } finally { setBusy(false); }
+  };
+
+  const recommend = async () => {
+    const text = recIn.trim();
+    if (!text || recBusy || out) return;
+    setRecBusy(true); setRec("");
+    try {
+      const data = await callCoach({ mode:"recommend", situation: text });
+      applyMeta(data);
+      setRec(data.text || "(no recommendation)");
+    } catch (e) {
+      setRec(e.message);
+      if (/budget|limit/i.test(e.message)) { setOut(true); setRemaining(0); }
+    } finally { setRecBusy(false); }
+  };
+
+  return (
+    <div>
+      <div className="detail-head">
+        <div className="k">AI · grounded on this playbook</div>
+        <h2 style={{ fontFamily:"var(--serif)" }}>Facilitator Coach</h2>
+      </div>
+      <span className="grounded"><span className="d" />Answers from your playbook</span>
+
+      <div className="coach-tabs">
+        <button className={tab==="ask"?"on":""} onClick={() => setTab("ask")}>Ask the coach</button>
+        <button className={tab==="rec"?"on":""} onClick={() => setTab("rec")}>Which ritual?</button>
+      </div>
+
+      <div className={"budget"+((remaining!=null && remaining<=3)?" low":"")}>
+        {remaining==null ? "AI ready · usage is capped to protect the free tier"
+          : <span>AI budget today · <b>{Math.max(0,remaining)}</b> left</span>}
+      </div>
+
+      {tab==="ask" ? (
+        <React.Fragment>
+          <div className="chatwin">
+            {chat.map((m,i) => (
+              <div key={i} className={"msg "+(m.role==="user"?"user":m.role==="sys"?"sys":"bot")}>{m.text}</div>
+            ))}
+            {busy && <div className="typing">coaching…</div>}
+          </div>
+          <div className="suggest">
+            {STARTERS.map((s) => (<button key={s} onClick={() => send(s)} disabled={busy||out}>{s}</button>))}
+          </div>
+          <div className="askrow">
+            <textarea value={input} placeholder={out?"Daily budget reached.":"Ask about running a ritual…"}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => { if (e.key==="Enter" && !e.shiftKey){ e.preventDefault(); send(); } }}
+              disabled={out} />
+            <button onClick={() => send()} disabled={busy||out||!input.trim()}>Send</button>
+          </div>
+        </React.Fragment>
+      ) : (
+        <React.Fragment>
+          <div className="suggest" style={{ marginTop:14 }}>
+            {SCENARIOS.map((s) => (<button key={s} onClick={() => setRecIn(s)} disabled={recBusy||out}>{s}</button>))}
+          </div>
+          <div className="askrow">
+            <textarea value={recIn} placeholder={out?"Daily budget reached.":"Describe what's going on with your team…"}
+              onChange={(e) => setRecIn(e.target.value)} disabled={out} />
+            <button onClick={recommend} disabled={recBusy||out||!recIn.trim()}>{recBusy?"…":"Find"}</button>
+          </div>
+          {(rec || recBusy) && <div className="rec-out">{recBusy?"Reading the playbook…":rec}</div>}
+        </React.Fragment>
+      )}
+    </div>
+  );
+}
+
+function RitualDetail({ r }) {
+  const durations = r.agenda.map((a,i) => i<r.agenda.length-1 ? r.agenda[i+1].t-a.t : null);
+  return (
+    <div>
+      <div className="detail-head">
+        <div className="k">{r.kicker}</div>
+        <h2>{r.name}</h2>
+      </div>
+      <div className="twocol">
+        <div className="box"><h4>Purpose</h4><p>{r.purpose}</p></div>
+        <div className="box"><h4>When to use it</h4><p>{r.whenToUse}</p></div>
+      </div>
+
+      <div className="section-t">Agenda</div>
+      <div className="timeline">
+        {r.agenda.map((a,i) => (
+          <div className="trow" key={i}>
+            <div className="tc">{fmt(a.t)}</div>
+            <div className="trail">
+              <span className="lab">{a.label}{durations[i]!=null && a.note && <span className="dur">{durations[i]}m</span>}</span>
+              {a.note && <div className="nt">{a.note}</div>}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {r.id==="retro" && (<React.Fragment>
+        <div className="section-t">Rose · Bud · Thorn board</div>
+        <RetroBoard />
+        <CountdownTimer initial={60} />
+      </React.Fragment>)}
+      {r.id==="oneonone" && (<React.Fragment>
+        <div className="section-t">Agenda builder</div>
+        <OneOnOneBuilder prompts={r.prompts} />
+      </React.Fragment>)}
+      {r.id==="critique" && (<React.Fragment>
+        <div className="section-t">Critique runner</div>
+        <CritiqueRunner phases={r.phases} />
+      </React.Fragment>)}
+
+      <div className="section-t">Facilitator tips</div>
+      <ul className="plist">{r.tips.map((t,i) => (<li key={i}><span className="m">›</span><span>{t}</span></li>))}</ul>
+
+      <div className="section-t">Common pitfalls</div>
+      <ul className="plist warn">{r.pitfalls.map((t,i) => (<li key={i}><span className="m">✕</span><span>{t}</span></li>))}</ul>
+    </div>
+  );
+}
+
+function Home({ go }) {
+  return (
+    <div>
+      <div className="hero">
+        <div className="eyebrow">Field guide · for your first day as a manager</div>
+        <h1>The rituals that turn<br/>a group into a team.</h1>
+        <p>Standups, retros, 1-on-1s and critiques aren't just meetings — they're the leadership tools that build trust and momentum. Here's how to run them, with the timers and boards to do it live.</p>
+      </div>
+      <div className="grid">
+        {Object.values(PLAYBOOK).map((r) => (
+          <button className="rcard" key={r.id} onClick={() => go(r.id)}>
+            <div className="k">{r.kicker}</div>
+            <h3>{r.name}</h3>
+            <p>{r.blurb}</p>
+            <div className="go mono">Open ritual →</div>
+          </button>
+        ))}
+        <button className="rcard aicard" onClick={() => go("coach")}>
+          <div className="k">AI · grounded</div>
+          <h3>Facilitator Coach</h3>
+          <p>Stuck mid-ritual? Ask a coach that answers straight from this playbook — or have it recommend the right ritual for your situation.</p>
+          <div className="go mono">Ask the coach →</div>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  const [view, setView] = useState("home");
+  useEffect(() => { window.scrollTo(0,0); }, [view]);
+  return (
+    <div>
+      <header className="bar">
+        <div className="bar-in">
+          <span className="brand" onClick={() => setView("home")}>Ritual<span className="dot">·</span>Playbook</span>
+          {view!=="home" && <button className="bk" onClick={() => setView("home")}>← All rituals</button>}
+        </div>
+      </header>
+      <main className="wrap">
+        {view==="home" && <Home go={setView} />}
+        {view==="coach" && <Coach />}
+        {PLAYBOOK[view] && <RitualDetail r={PLAYBOOK[view]} />}
+        <div className="foot">Depth over quantity · 3 rituals · 1 grounded AI coach — built to actually use.</div>
+      </main>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
